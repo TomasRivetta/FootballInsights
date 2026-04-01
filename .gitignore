@@ -1,0 +1,50 @@
+# 🔥 OS
+.DS_Store
+Thumbs.db
+
+# 🔥 Editors / IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 🔥 Logs
+*.log
+logs/
+
+# 🔥 Env / secrets
+.env
+.env.*
+*.env
+
+# 🔥 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+env/
+
+# 🔥 Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🔥 Build outputs
+dist/
+build/
+.next/
+out/
+
+# 🔥 Coverage
+coverage/
+htmlcov/
+.pytest_cache/
+
+# 🔥 Misc
+*.swp
+*.tmp
