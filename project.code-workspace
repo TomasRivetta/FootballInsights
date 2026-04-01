@@ -1,0 +1,32 @@
+{
+    "folders": [
+        {
+            "name":"DataSet",
+            "path":"data"
+        },
+        {
+            "name":"Backend",
+            "path":"backend"
+        },
+        {
+            "name":"Frontend",
+            "path":"frontend"
+        },
+        {
+            "name":"root",
+            "path":"."
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "data": true,
+            "backend": true,
+            "frontend": true
+        }
+    }
+}
