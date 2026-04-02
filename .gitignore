@@ -48,3 +48,7 @@ htmlcov/
 # 🔥 Misc
 *.swp
 *.tmp
+
+
+antigravity/
+data/

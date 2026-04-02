@@ -1,10 +1,6 @@
 {
     "folders": [
         {
-            "name":"DataSet",
-            "path":"data"
-        },
-        {
             "name":"Backend",
             "path":"backend"
         },
@@ -24,9 +20,9 @@
             "**/.hg": true,
             "**/.DS_Store": true,
             "**/Thumbs.db": true,
-            "data": true,
             "backend": true,
             "frontend": true
-        }
+        },
+        "postman.settings.dotenv-detection-notification-visibility": false
     }
 }
