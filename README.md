@@ -1,45 +1,39 @@
 # ⚽ FootballInsights
 
-Análisis de resultados internacionales de fútbol utilizando Python y visualización de datos.
+Dashboard interactivo de jugadores de fútbol construido con Streamlit y Python.
 
 ## 🚀 Descripción
 
-FootballInsights es una aplicación orientada a Data Analysis que permite explorar, limpiar y visualizar datos históricos de partidos internacionales de fútbol.
+FootballInsights es una aplicación de análisis de datos que permite explorar estadísticas de jugadores, apariciones, valuaciones de mercado y partidos.
 
-El objetivo del proyecto es aplicar técnicas de análisis de datos utilizando herramientas del ecosistema de Python.
+El objetivo del proyecto es aplicar técnicas de análisis y visualización con herramientas del ecosistema de Python sobre datasets de fútbol.
 
 ## 🧠 Funcionalidades
 
-- 📊 Análisis exploratorio de datos
-- 🧹 Limpieza de datos (valores nulos, duplicados)
-- 📈 Visualización de estadísticas
-- ⚽ Análisis de resultados por país
-- 🥅 Goles promedio por partido
-- 🔥 Equipos con mejor rendimiento histórico
+- 📊 Selección de jugadores desde un listado interactivo
+- 📈 Métricas agregadas de partidos, minutos, goles y asistencias
+- 🟨 Seguimiento de tarjetas amarillas y rojas
+- 💶 Visualización de la evolución del valor de mercado
+- 🗓️ Tabla con los últimos partidos del jugador seleccionado
 
 ## 🛠️ Tecnologías
 
-### Backend
 - Python
+- Streamlit
 - pandas
-- numpy
-- matplotlib / seaborn
-- FastAPI
-
-### Frontend
-- React
-- Tailwind CSS
+- matplotlib
 
 
 ## 📊 Dataset
 
-Dataset utilizado:
-👉 https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017
+El proyecto usa archivos CSV ubicados en `data/`, entre ellos:
 
-Contiene:
-- Más de 40.000 partidos internacionales
-- Resultados históricos desde 1872
-- Equipos, goles, fechas y torneos
+- `players.csv`
+- `appearances.csv`
+- `player_valuations.csv`
+- `games.csv`
+
+Estos archivos alimentan el dashboard para combinar información de jugadores, apariciones, valuaciones y partidos.
 
 ## 🎯 Objetivo del proyecto
 
@@ -48,7 +42,36 @@ Este proyecto forma parte de mi aprendizaje en:
 Data Analysis
 Python para análisis de datos
 Visualización de información
-Construcción de APIs con FastAPI
+Construcción de dashboards con Streamlit
+
+## ▶️ Cómo ejecutar la app
+
+1. Instalar las dependencias:
+
+```powershell
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+2. Ejecutar la app desde la raíz del proyecto:
+
+```powershell
+.\venv\Scripts\python.exe -m streamlit run app\main.py
+```
+
+Alternativamente, podés activar el entorno virtual y luego ejecutar:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+python -m streamlit run app\main.py
+```
+
+Si PowerShell bloquea la activación del entorno virtual, ejecutá:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\venv\Scripts\Activate.ps1
+python -m streamlit run app\main.py
+```
 
 ## 👨‍💻 Autor
 

@@ -1,4 +1,4 @@
-#from scripts.update_dataset import update_dataset
+# from scripts.update_dataset import update_dataset
 
 import pandas as pd
 import streamlit as st
@@ -7,14 +7,16 @@ from pathlib import Path
 
 st.set_page_config(page_title="Football Player Dashboard", layout="wide")
 
-DATA_DIR = Path("../data")
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
 
-@st.cache_data
-def load_data():
+@st.cache_data(show_spinner=False)
+def load_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     players = pd.read_csv(DATA_DIR / "players.csv")
     appearances = pd.read_csv(DATA_DIR / "appearances.csv")
     valuations = pd.read_csv(DATA_DIR / "player_valuations.csv")
     games = pd.read_csv(DATA_DIR / "games.csv")
+    clubs = pd.read_csv(DATA_DIR / "clubs.csv")
 
     if "date" in valuations.columns:
         valuations["date"] = pd.to_datetime(valuations["date"], errors="coerce")
@@ -22,7 +24,7 @@ def load_data():
     if "date" in games.columns:
         games["date"] = pd.to_datetime(games["date"], errors="coerce")
 
-    return players, appearances, valuations, games
+    return players, appearances, valuations, games, clubs
 
 
 def find_name_column(df: pd.DataFrame) -> str:
@@ -33,18 +35,27 @@ def find_name_column(df: pd.DataFrame) -> str:
     raise ValueError("No encontré una columna de nombre en players.csv")
 
 
+def build_club_lookup(df: pd.DataFrame) -> pd.DataFrame:
+    required_columns = {"club_id", "name"}
+    if not required_columns.issubset(df.columns):
+        return pd.DataFrame(columns=["club_id", "name"])
+
+    return df[["club_id", "name"]].dropna().drop_duplicates()
+
+
 st.title("⚽ Football Player Dashboard")
 
 if not DATA_DIR.exists():
     st.error("No se encontró la carpeta data/")
     st.stop()
 
-players, appearances, valuations, games = load_data()
+players, appearances, valuations, games, clubs = load_data()
 
 player_name_col = find_name_column(players)
+club_lookup = build_club_lookup(clubs)
 
 player_options = (
-    players[[ "player_id", player_name_col ]]
+    players[["player_id", player_name_col]]
     .dropna()
     .drop_duplicates()
     .sort_values(player_name_col)
@@ -55,7 +66,6 @@ selected_name = st.selectbox("Seleccioná un jugador", player_options[player_nam
 selected_player = player_options[player_options[player_name_col] == selected_name].iloc[0]
 player_id = selected_player["player_id"]
 
-player_info = players[players["player_id"] == player_id].copy()
 player_apps = appearances[appearances["player_id"] == player_id].copy()
 player_vals = valuations[valuations["player_id"] == player_id].copy()
 
@@ -91,6 +101,7 @@ with left:
     ax.set_ylabel("Cantidad")
     ax.set_title(f"Resumen estadístico de {selected_name}")
     st.pyplot(fig)
+    plt.close(fig)
 
 with right:
     st.subheader("Valor de mercado")
@@ -102,6 +113,7 @@ with right:
         ax.set_ylabel("Valor en EUR")
         ax.set_title(f"Evolución del valor de mercado de {selected_name}")
         st.pyplot(fig)
+        plt.close(fig)
     else:
         st.info("No hay datos de valuación disponibles para este jugador.")
 
@@ -109,15 +121,36 @@ st.subheader("Últimos partidos")
 
 if "game_id" in player_apps.columns and "game_id" in games.columns:
     merged = player_apps.merge(games, on="game_id", how="left")
-    cols_to_show = [col for col in [
-        "date", "competition_id", "home_club_id", "away_club_id",
-        "minutes_played", "goals", "assists"
-    ] if col in merged.columns]
+
+    # Usar directamente las columnas home_club_name y away_club_name de games
+    if "home_club_name" in merged.columns and "away_club_name" in merged.columns:
+        merged["partido"] = merged["home_club_name"].fillna("") + " vs " + merged["away_club_name"].fillna("")
+        
+        cols_to_show = [col for col in [
+            "date", "competition_id", "partido", "minutes_played", "goals", "assists"
+        ] if col in merged.columns]
+    else:
+        cols_to_show = [col for col in [
+            "date", "competition_id", "home_club_id", "away_club_id", "minutes_played", "goals", "assists"
+        ] if col in merged.columns]
 
     if "date" in merged.columns:
         merged = merged.sort_values("date", ascending=False)
 
-    st.dataframe(merged[cols_to_show].head(10), use_container_width=True)
+    display_df = merged[cols_to_show].head(10).rename(
+        columns={
+            "date": "Fecha",
+            "competition_id": "Competición",
+            "partido": "Partido",
+            "home_club_id": "Equipo local",
+            "away_club_id": "Equipo visitante",
+            "minutes_played": "Minutos",
+            "goals": "Goles",
+            "assists": "Asistencias",
+        }
+    )
+
+    st.dataframe(display_df, use_container_width=True)
 else:
     st.info("No se pudieron unir appearances con games por game_id.")
 
