@@ -52,3 +52,7 @@ htmlcov/
 
 antigravity/
 data/
+scripts/SETUP_KAGGLE.md
+update_dataset.py
+kaggle.json
+update_kaggle.bat

@@ -125,22 +125,22 @@ if "game_id" in player_apps.columns and "game_id" in games.columns:
     # Usar directamente las columnas home_club_name y away_club_name de games
     if "home_club_name" in merged.columns and "away_club_name" in merged.columns:
         merged["partido"] = merged["home_club_name"].fillna("") + " vs " + merged["away_club_name"].fillna("")
-        
+
         cols_to_show = [col for col in [
-            "date", "competition_id", "partido", "minutes_played", "goals", "assists"
+            "date_y", "competition_id_y", "partido", "minutes_played", "goals", "assists"
         ] if col in merged.columns]
     else:
         cols_to_show = [col for col in [
-            "date", "competition_id", "home_club_id", "away_club_id", "minutes_played", "goals", "assists"
+            "date_y", "competition_id_y", "home_club_id", "away_club_id", "minutes_played", "goals", "assists"
         ] if col in merged.columns]
 
-    if "date" in merged.columns:
-        merged = merged.sort_values("date", ascending=False)
+    if "date_y" in merged.columns:
+        merged = merged.sort_values("date_y", ascending=False)
 
     display_df = merged[cols_to_show].head(10).rename(
         columns={
-            "date": "Fecha",
-            "competition_id": "Competición",
+            "date_y": "Fecha",
+            "competition_id_y": "Competición",
             "partido": "Partido",
             "home_club_id": "Equipo local",
             "away_club_id": "Equipo visitante",
